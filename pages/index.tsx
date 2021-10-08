@@ -9,6 +9,7 @@ const Home: NextPage = () => {
   const [moveCount, setMoveCount] = useState(0);
   const [gameActive, setGameActive] = useState(true);
   const [gameOutcome, setGameOutcome] = useState(null);
+  const [winCount, setWinCount] = useState({ X: 0, O: 0 });
 
   function toggleTile(player: number, tileNumber: number): void {
     if (!tileState[tileNumber] && gameActive) {
@@ -22,6 +23,7 @@ const Home: NextPage = () => {
   }
 
   useEffect(() => {
+    console.log('useEffect');
     //check win
     const possibleWins: number[][] = [
       [1, 2, 3], //row-top
@@ -43,19 +45,32 @@ const Home: NextPage = () => {
           values[0] === values[2]
         ) {
           console.log('WIN');
+          console.log([values[0]], winCount[values[0]] + 1);
           setGameActive(false);
           setGameOutcome(values[0]);
+          setWinCount({ ...winCount, [values[0]]: winCount[values[0]] + 1 });
         }
       });
-      if (moveCount === 9) console.log('staleMate');
     }
-  }, [tileState, moveCount]);
+    // if (moveCount === 9 && gameActive) console.log('staleMate'); //todo check for stalemate (and on win last move)
+  }, [tileState]);
 
   function resetGame() {
     setTileState({});
     setActivePlayer(0);
     setMoveCount(0);
     setGameActive(true);
+    setGameOutcome(null);
+    setWinCount({ X: 0, O: 0 });
+  }
+  function newGame() {
+    if (!gameActive) {
+      setTileState({});
+      setActivePlayer(gameOutcome === 'O' ? 0 : 1); //todo set to winning player
+      setMoveCount(0);
+      setGameActive(true);
+      //todo update player win count
+    } else console.log('Please finish current game first');
   }
 
   return (
@@ -67,6 +82,9 @@ const Home: NextPage = () => {
       </Head>
 
       <main className="h-full w-full test-border flex flex-col">
+        <h1>
+          O: {winCount['O']} X: {winCount['X']}
+        </h1>
         <h2>Player Turn: {activePlayer ? 'X' : 'O'}</h2>
         <Board
           tileCount={9}
@@ -76,58 +94,8 @@ const Home: NextPage = () => {
         />
         <button onClick={resetGame}>Reset</button>
         {/* //! change color on win/stalemate */}
-        {/* <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h2>Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h2>Learn &rarr;</h2>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h2>Examples &rarr;</h2>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h2>Deploy &rarr;</h2>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div> */}
+        <button onClick={newGame}>New Game</button>
       </main>
-
-      {/* <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
-      </footer> */}
     </div>
   );
 };
