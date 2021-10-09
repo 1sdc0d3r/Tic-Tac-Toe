@@ -12,7 +12,7 @@ export default function Board(props) {
         //   const color = iterator % 2 ? 'black' : 'white';
         // console.log({ tileNumber, state });
         return (<div className={"tile test-border w-1/3 h-1/3 flex overflow-hidden"} key={iterator} onClick={function () { return toggleTile(player, tileNumber); }}>
-        <p className="text-red-600 text-9xl w-win h-min m-auto text-center">
+        <p className="text-red-600 text-9xl w-win h-min m-auto text-center select-none">
           {state}
         </p>
       </div>);

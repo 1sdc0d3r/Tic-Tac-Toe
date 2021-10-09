@@ -44,15 +44,19 @@ const Home: NextPage = () => {
           values[0] === values[1] &&
           values[0] === values[2]
         ) {
-          console.log('WIN');
-          console.log([values[0]], winCount[values[0]] + 1);
           setGameActive(false);
           setGameOutcome(values[0]);
           setWinCount({ ...winCount, [values[0]]: winCount[values[0]] + 1 });
+          console.log('WIN');
         }
       });
     }
-    // if (moveCount === 9 && gameActive) console.log('staleMate'); //todo check for stalemate (and on win last move)
+  }, [tileState]);
+
+  useEffect(() => {
+    console.log(gameActive);
+    if (moveCount === 9 && gameActive) console.log('staleMate');
+    // todo not stalemate on final win play
   }, [tileState]);
 
   function resetGame() {

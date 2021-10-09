@@ -27,7 +27,7 @@ export default function Board(props: any) {
         key={iterator}
         onClick={() => toggleTile(player, tileNumber)}
       >
-        <p className="text-red-600 text-9xl w-win h-min m-auto text-center">
+        <p className="text-red-600 text-9xl w-win h-min m-auto text-center select-none">
           {state}
         </p>
       </div>
