@@ -78,7 +78,7 @@ const Home: NextPage = () => {
     ); //? better to set each key:value separate or as object
   }
 
-  function resetGame() {
+  function resetGame(): void {
     setTileState({});
     setActivePlayer(0);
     setMoveCount(0);
@@ -87,7 +87,7 @@ const Home: NextPage = () => {
     setWinCount({ X: 0, O: 0 });
   }
 
-  function newGame() {
+  function newGame(): void {
     if (!gameActive) {
       setTileState({});
       setActivePlayer(gameOutcome === 'O' ? 0 : 1);
