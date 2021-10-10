@@ -4,6 +4,11 @@ import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Board from '../dist/board';
 
+//todo keep state (session storage)
+//todo create a "WIN/Stalemate/Lose" page/layover of index
+//todo play against computer
+//todo choose play style (PvP || PvC)
+
 const Home: NextPage = () => {
   const [tileState, setTileState] = useState({});
   const [activePlayer, setActivePlayer] = useState(0);
@@ -25,8 +30,6 @@ const Home: NextPage = () => {
   }
   //* check win
   useEffect(() => {
-    console.log('useEffect');
-    //todo local variable for win and check for stalemate?
     let win: boolean = false;
 
     const possibleWins: number[][] = [
@@ -65,11 +68,20 @@ const Home: NextPage = () => {
     }
   }, [tileState]);
 
-  // useEffect(() => {
-  //   console.log(gameActive);
-  //   if (moveCount === 9 && gameActive) console.log('staleMate');
-  //   // todo not stalemate on final win play
-  // }, [tileState]);
+  function saveSession(): void {
+    sessionStorage.setItem(
+      'tttState',
+      JSON.stringify({
+        tileState,
+        activePlayer,
+        moveCount,
+        gameActive,
+        gameOutcome,
+        winCount,
+        gameCount,
+      })
+    ); //? better to set each key:value separate or as object
+  }
 
   function resetGame() {
     setTileState({});
