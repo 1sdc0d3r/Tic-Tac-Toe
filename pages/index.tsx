@@ -1,10 +1,13 @@
 import type { NextPage } from 'next';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Board from '../dist/board';
 
 const Home: NextPage = () => {
+  const router = useRouter();
+
   const [tileState, setTileState] = useState({});
   const [activePlayer, setActivePlayer] = useState(0);
   const [moveCount, setMoveCount] = useState(0);
@@ -25,7 +28,7 @@ const Home: NextPage = () => {
   }
   //* check win
   useEffect(() => {
-    let win: boolean = false;
+    let gameOver: boolean = false;
 
     const possibleWins: number[][] = [
       [1, 2, 3], //row-top
@@ -37,30 +40,34 @@ const Home: NextPage = () => {
       [1, 5, 9], //diagonal-topL-bottomR
       [3, 5, 7], //diagonal-topR-bottomL
     ];
-
-    if (Object.keys(tileState).length > 3 && !win) {
+    if (!gameOver && moveCount === 9) {
+      setGameActive(false);
+      setGameCount(gameCount + 1);
+      gameOver = true;
+      router.push('/stalemate');
+    } else if (Object.keys(tileState).length > 3 && !gameOver) {
       possibleWins.forEach((arr) => {
         const values: number[] = arr.map((tile: number) => tileState[tile]);
         if (
           !values.includes(undefined) &&
           values[0] === values[1] &&
           values[0] === values[2] &&
-          !win //* reduce runtime
+          !gameOver //* reduce runtime
         ) {
           console.log('WIN');
           setGameActive(false);
           setGameOutcome(values[0]);
           setWinCount({ ...winCount, [values[0]]: winCount[values[0]] + 1 });
           setGameCount(gameCount + 1);
-          win = true;
+          gameOver = true;
         }
       });
     }
-    if (!win && moveCount === 9) {
-      setGameActive(false);
-      setGameCount(gameCount + 1);
-      console.log('staleMate');
-    }
+    //todo stalemate page
+    if (gameOver)
+      setTimeout(() => {
+        router.push('/win');
+      }, 500);
   }, [tileState]);
 
   function saveSession(): void {
@@ -81,6 +88,7 @@ const Home: NextPage = () => {
       setWinCount(winCount);
       setGameCount(gameCount);
       setGameOutcome(gameOutcome);
+      setActivePlayer(gameOutcome === 'O' ? 0 : 1);
     }
   }, []);
 
@@ -97,14 +105,14 @@ const Home: NextPage = () => {
     setWinCount({ X: 0, O: 0 });
   }
 
-  function newGame(): void {
-    if (!gameActive) {
-      setTileState({});
-      setActivePlayer(gameOutcome === 'O' ? 0 : 1);
-      setMoveCount(0);
-      setGameActive(true);
-    } else console.log('Please finish current game first');
-  }
+  // function newGame(): void {
+  //   if (!gameActive) {
+  //     setTileState({});
+  //     setActivePlayer(gameOutcome === 'O' ? 0 : 1);
+  //     setMoveCount(0);
+  //     setGameActive(true);
+  //   } else console.log('Please finish current game first');
+  // }
 
   return (
     <div className="h-screen">
@@ -129,8 +137,7 @@ const Home: NextPage = () => {
           toggleTile={toggleTile}
         />
         <button onClick={resetGame}>Reset</button>
-        {/* //! change color on win/stalemate */}
-        <button onClick={newGame}>New Game</button>
+        {/* <button onClick={newGame}>New Game</button> */}
         <Link href="/rules">
           <a className="w-min self-center hover:text-blue-400">Rules</a>
         </Link>
