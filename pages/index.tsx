@@ -13,7 +13,7 @@ const Home: NextPage = () => {
   const [moveCount, setMoveCount] = useState(0);
   const [gameActive, setGameActive] = useState(true);
   const [gameOutcome, setGameOutcome] = useState(null);
-  const [winCount, setWinCount] = useState({ X: 0, O: 0 });
+  const [winCount, setWinCount] = useState({ X: 0, O: 0, tie: 0 });
   const [gameCount, setGameCount] = useState(0);
 
   function toggleTile(player: number, tileNumber: number): void {
@@ -43,6 +43,7 @@ const Home: NextPage = () => {
     if (!gameOver && moveCount === 9) {
       setGameActive(false);
       setGameCount(gameCount + 1);
+      setWinCount({ ...winCount, tie: winCount.tie + 1 });
       gameOver = true;
       router.push('/stalemate');
     } else if (Object.keys(tileState).length > 3 && !gameOver) {
@@ -102,7 +103,7 @@ const Home: NextPage = () => {
     setMoveCount(0);
     setGameActive(true);
     setGameOutcome(null);
-    setWinCount({ X: 0, O: 0 });
+    setWinCount({ X: 0, O: 0, tie: 0 });
   }
 
   // function newGame(): void {
@@ -113,7 +114,7 @@ const Home: NextPage = () => {
   //     setGameActive(true);
   //   } else console.log('Please finish current game first');
   // }
-
+  console.log(winCount);
   return (
     <div className="h-screen">
       <Head>
@@ -127,7 +128,8 @@ const Home: NextPage = () => {
 
       <main className="h-full w-full test-border flex flex-col">
         <h1>
-          O: {winCount['O']} X: {winCount['X']} Games Played: {gameCount}
+          O: {winCount['O']} X: {winCount['X']} Tie: {winCount['tie']} Games
+          Played: {gameCount}
         </h1>
         <h2>Player Turn: {activePlayer ? 'X' : 'O'}</h2>
         <Board
