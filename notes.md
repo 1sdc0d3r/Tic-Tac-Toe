@@ -1,0 +1,4 @@
+-keep state (session storage)
+-create a "WIN/Stalemate/Lose" page/layover of index
+-play against computer
+-choose play style (PvP || PvC)

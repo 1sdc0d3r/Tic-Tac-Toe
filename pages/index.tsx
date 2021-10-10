@@ -4,11 +4,6 @@ import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Board from '../dist/board';
 
-//todo keep state (session storage)
-//todo create a "WIN/Stalemate/Lose" page/layover of index
-//todo play against computer
-//todo choose play style (PvP || PvC)
-
 const Home: NextPage = () => {
   const [tileState, setTileState] = useState({});
   const [activePlayer, setActivePlayer] = useState(0);
@@ -95,10 +90,9 @@ const Home: NextPage = () => {
   function newGame() {
     if (!gameActive) {
       setTileState({});
-      setActivePlayer(gameOutcome === 'O' ? 0 : 1); //todo set to winning player
+      setActivePlayer(gameOutcome === 'O' ? 0 : 1);
       setMoveCount(0);
       setGameActive(true);
-      //todo update player win count
     } else console.log('Please finish current game first');
   }
 
