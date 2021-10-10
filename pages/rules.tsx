@@ -1,4 +1,5 @@
 import type { NextPage } from 'next';
+import Link from 'next/link';
 
 const Rules: NextPage = () => {
   return (
@@ -23,6 +24,9 @@ const Rules: NextPage = () => {
           playing multiple games).
         </li>
       </ol>
+      <Link href="/">
+        <a>Back to Game</a>
+      </Link>
     </main>
   );
 };

@@ -67,16 +67,26 @@ const Home: NextPage = () => {
     sessionStorage.setItem(
       'tttState',
       JSON.stringify({
-        tileState,
-        activePlayer,
-        moveCount,
-        gameActive,
-        gameOutcome,
         winCount,
         gameCount,
+        gameOutcome,
       })
     ); //? better to set each key:value separate or as object
   }
+
+  useEffect((): void => {
+    const sessionRestore = JSON.parse(sessionStorage.getItem('tttState'));
+    if (sessionRestore) {
+      const { winCount, gameCount, gameOutcome } = sessionRestore;
+      setWinCount(winCount);
+      setGameCount(gameCount);
+      setGameOutcome(gameOutcome);
+    }
+  }, []);
+
+  useEffect((): void => {
+    saveSession();
+  }, [gameCount]);
 
   function resetGame(): void {
     setTileState({});
